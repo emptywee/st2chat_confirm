@@ -1,0 +1,14 @@
+---
+name: test.confirm_exec
+enabled: true
+action_ref: st2chat_confirm.confirm_exec
+description: Confirm potentially dangerous execution
+formats:
+  - display: "confirm <execution id>"
+    representation:
+      - "confirm {{exec_id}}"
+ack:
+  format: "Confirming action!"
+  append_url: false
+result:
+  enabled: false

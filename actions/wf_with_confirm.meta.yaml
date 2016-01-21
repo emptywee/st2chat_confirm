@@ -1,0 +1,19 @@
+---
+  description: "test wf with confirm from chatops"
+  runner_type: "mistral-v2"
+  tags: []
+  enabled: true
+  pack: "st2chat_confirm"
+  entry_point: "workflows/wf_with_confirm.yaml"
+  uid: "action:st2chat_confirm:wf_with_confirm"
+  parameters: 
+    hostlist: 
+      required: true
+      type: "string"
+      description: "a list of hosts"
+    param1: 
+      default: ""
+      type: "string"
+      description: "Some parameter"
+  ref: "st2chat_confirm.wf_with_confirm"
+  name: "wf_with_confirm"

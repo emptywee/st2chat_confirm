@@ -1,0 +1,9 @@
+---
+chain:
+    -
+        name: "save_key"
+        ref: "st2.kv.set"
+        params:
+            key: "{{action_context.parent.api_user}}_{{exec_id}}"
+            value: "confirmed"
+            ttl: 60

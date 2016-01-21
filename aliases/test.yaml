@@ -1,0 +1,12 @@
+---
+name: st2chat_confirm.wf_with_confirm
+enabled: true
+action_ref: st2chat_confirm.wf_with_confirm
+description: Test workflow with confirm. Starting point.
+formats:
+  - display: "do_something with <hostlist> <param1>"
+    representation:
+      - "do_something with {{hostlist}} {{param1}}"
+result:
+  format: |
+    Execution ID {{ execution.id }} complete.

@@ -1,0 +1,56 @@
+---
+version: '2.0'
+
+st2chat_confirm.wf_with_confirm:
+  type: direct
+  input:
+    - hostlist
+    - param1
+  tasks:
+    publish_data:
+      # [297, 28]
+      action: core.noop
+      publish:
+        chat_user: <% env().get('__actions').get('st2.action').st2_context.parent.api_user %>
+        source_channel: <% env().get('__actions').get('st2.action').st2_context.parent.source_channel %>
+        exec_id: <% env().get('__actions').get('st2.action').st2_context.parent.execution_id %> 
+      on-success:
+        - post_confirm_message
+    post_confirm_message:
+      # [286, 163]
+      action: chatops.post_message
+      input:
+        channel: '<% $.source_channel %>'
+        message: '@<% $.chat_user %>, the action you have requested is dangerous. Please, confirm by issuing "! confirm <% $.exec_id %>" command. You have 30 seconds to confirm it.'
+
+      on-success:
+        - wait_for_confirmation
+    wait_for_confirmation:
+      # [286, 304]
+      action: st2.kv.get
+      input:
+        key: '<% $.chat_user %>_<% $.exec_id %>'
+
+      retry:
+        count: 10
+        delay: 3
+
+      on-error:
+        - post_not_confirmed
+      on-success:
+        - post_confirmed
+    post_not_confirmed:
+      # [456, 434]
+      action: chatops.post_message
+      input:
+        channel: '<% $.source_channel %>'
+        message: '@<% $.chat_user %>, I have not received confirmation from you within 30 seconds. The execution has been aborted.'
+
+    post_confirmed:
+      # [97, 445]
+      action: chatops.post_message
+      input:
+        channel: '<% $.source_channel %>'
+        message: '@<% $.chat_user %>, The action is confirmed. Proceeding...'
+      
+
